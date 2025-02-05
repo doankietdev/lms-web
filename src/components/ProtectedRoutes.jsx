@@ -1,35 +1,23 @@
-import { useSelector } from "react-redux"
-import { Navigate } from "react-router-dom";
+import { useAuth0 } from '@auth0/auth0-react'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 
-export const ProtectedRoute = ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
+export const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0()
 
-    if(!isAuthenticated){
-        return <Navigate to="/login"/>
-    }
+  if (!isLoading && !isAuthenticated) {
+    return loginWithRedirect()
+  }
 
-    return children;
-}
-export const AuthenticatedUser = ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
-
-    if(isAuthenticated){
-        return <Navigate to="/"/>
-    }
-
-    return children;
+  return children
 }
 
-export const AdminRoute = ({children}) => {
-    const {user, isAuthenticated} = useSelector(store=>store.auth);
+export const AdminRoute = ({ children }) => {
+  const { user } = useSelector((store) => store.user)
 
-    if(!isAuthenticated){
-        return <Navigate to="/login"/>
-    }
+  if (user?.role !== 'instructor') {
+    return <Navigate to="/" />
+  }
 
-    if(user?.role !== "instructor"){
-        return <Navigate to="/"/>
-    }
-
-    return children;
+  return children
 }

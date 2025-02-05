@@ -1,27 +1,36 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
-import React from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import LoadingSpinner from '@/components/LoadingSpinner'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useGetPurchasedCoursesQuery } from '@/features/api/purchaseApi'
+import React from 'react'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 
 const Dashboard = () => {
+  const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery()
 
-  const {data, isSuccess, isError, isLoading} = useGetPurchasedCoursesQuery();
+  if (isError) return <h1 className="text-red-500">Failed to get purchased course</h1>
 
-  if(isLoading) return <h1>Loading...</h1>
-  if(isError) return <h1 className="text-red-500">Failed to get purchased course</h1>
+  const { purchasedCourse } = data || []
 
-  //
-  const {purchasedCourse} = data || [];
-
-  const courseData = purchasedCourse.map((course)=> ({
-    name:course.courseId.courseTitle,
-    price:course.courseId.coursePrice
+  const courseData = purchasedCourse?.map((course) => ({
+    name: course.courseId.courseTitle,
+    price: course.courseId.coursePrice
   }))
 
-  const totalRevenue = purchasedCourse.reduce((acc,element) => acc+(element.amount || 0), 0);
+  const totalRevenue = purchasedCourse?.reduce((acc, element) => acc + (element.amount || 0), 0)
 
-  const totalSales = purchasedCourse.length;
-  return (
+  const totalSales = purchasedCourse?.length
+
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader>
@@ -44,9 +53,7 @@ const Dashboard = () => {
       {/* Course Prices Card */}
       <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
         <CardHeader>
-          <CardTitle className="text-xl font-semibold text-gray-700">
-            Course Prices
-          </CardTitle>
+          <CardTitle className="text-xl font-semibold text-gray-700">Course Prices</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={250}>
@@ -66,14 +73,14 @@ const Dashboard = () => {
                 dataKey="price"
                 stroke="#4a90e2" // Changed color to a different shade of blue
                 strokeWidth={3}
-                dot={{ stroke: "#4a90e2", strokeWidth: 2 }} // Same color for the dot
+                dot={{ stroke: '#4a90e2', strokeWidth: 2 }} // Same color for the dot
               />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard

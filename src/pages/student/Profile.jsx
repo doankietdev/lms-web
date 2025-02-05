@@ -12,13 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Course from "./Course";
 import {
   useLoadUserQuery,
   useUpdateUserMutation,
 } from "@/features/api/userApi";
 import { toast } from "sonner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -36,8 +37,6 @@ const Profile = () => {
     },
   ] = useUpdateUserMutation();
 
-  console.log(data);
-
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0];
     if (file) setProfilePhoto(file);
@@ -52,7 +51,7 @@ const Profile = () => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -62,14 +61,11 @@ const Profile = () => {
     if (isError) {
       toast.error(error.message || "Failed to update profile");
     }
-  }, [error, updateUserData, isSuccess, isError]);
+  }, [error, updateUserData, isSuccess, isError, refetch, data?.message]);
 
-  if (isLoading) return <h1>Profile Loading...</h1>;
+  if (isLoading) return <LoadingSpinner message="Profile loading..." />
 
   const user = data && data.user;
-
-  console.log(user);
-  
 
   return (
     <div className="max-w-4xl mx-auto px-4 my-10">
@@ -119,7 +115,7 @@ const Profile = () => {
               <DialogHeader>
                 <DialogTitle>Edit Profile</DialogTitle>
                 <DialogDescription>
-                  Make changes to your profile here. Click save when you're
+                  Make changes to your profile here. Click save when you&apos;re
                   done.
                 </DialogDescription>
               </DialogHeader>
@@ -164,10 +160,10 @@ const Profile = () => {
         </div>
       </div>
       <div>
-        <h1 className="font-medium text-lg">Courses you're enrolled in</h1>
+        <h1 className="font-medium text-lg">Courses you&apos;re enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
           {user.enrolledCourses.length === 0 ? (
-            <h1>You haven't enrolled yet</h1>
+            <h1>You haven&apos;t enrolled yet</h1>
           ) : (
             user.enrolledCourses.map((course) => (
               <Course course={course} key={course._id} />

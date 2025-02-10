@@ -92,7 +92,7 @@ const CourseTable = () => {
           {data.courses.map((course) => (
             <TableRow key={course._id}>
               <TableCell onClick={() => navigate(`${course._id}`)} className='cursor-pointer' >{course.courseTitle}</TableCell>
-              <TableCell className="font-medium">{course?.coursePrice || 'NA'}</TableCell>
+              <TableCell className="font-medium">{course?.coursePrice === 0 ? 'Free' : course?.coursePrice ?? 'NA'}</TableCell>
               <TableCell>
                 {' '}
                 <Badge>{course.isPublished ? 'Published' : 'Draft'}</Badge>{' '}

@@ -21,7 +21,7 @@ import {
 import { useGetCourseDetailWithStatusQuery } from '@/features/api/purchaseApi'
 import { formatCash } from '@/lib/utils'
 import { BadgeInfo, Lock, PlayCircle } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -31,8 +31,14 @@ const CourseDetail = () => {
   const courseId = params.courseId
   const navigate = useNavigate()
   const { data, isLoading } = useGetCourseDetailWithStatusQuery(courseId)
+  const [isFree, setIsFree] = useState(false)
 
   const { course, purchased, isOwner } = data || {}
+
+  useEffect(() => {
+    if (isLoading) return
+    setIsFree(() => course?.coursePrice === 0)
+  }, [course?.coursePrice, isLoading])
 
   const handleContinueCourse = () => {
     navigate(`/course-progress/${courseId}`)
@@ -103,20 +109,25 @@ const CourseDetail = () => {
                 </div>
                 <h1 className="text-lg md:text-xl font-semibold flex items-center gap-4">
                   {formatCash(course?.coursePrice)}
-                  {purchased && (
+                  {purchased && !isFree && !isOwner && (
                     <Badge variant="outline" className="bg-green-600 text-white">
                       Purchased
                     </Badge>
                   )}
-                  {isOwner && (
+                  {isFree && (
                     <Badge variant="outline" className="bg-green-600 text-white">
+                      Free
+                    </Badge>
+                  )}
+                  {isOwner && (
+                    <Badge variant="outline" className="bg-orange-600 text-white">
                       Owner
                     </Badge>
                   )}
                 </h1>
               </CardContent>
               <CardFooter className="flex justify-center p-4">
-                {(purchased || isOwner) ? (
+                {(purchased || isOwner || isFree) ? (
                   <Button
                     disabled={!course?.lectures?.length}
                     onClick={handleContinueCourse}

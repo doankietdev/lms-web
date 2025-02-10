@@ -44,7 +44,7 @@ const Course = ({ course }) => {
             </Badge>
           </div>
           <div className="text-lg font-bold">
-            <span>{formatCash(course.coursePrice)}</span>
+            <span>{course.coursePrice === 0 ? 'Free' : formatCash(course.coursePrice)}</span>
           </div>
         </CardContent>
       </Card>

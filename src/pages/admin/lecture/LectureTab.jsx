@@ -57,32 +57,32 @@ const LectureTab = () => {
   const fileChangeHandler = async (e) => {
     setBtnDisable(true)
     const file = e.target.files[0]
-    if (file) {
-      const formData = new FormData()
-      formData.append('file', file)
-      setMediaProgress(true)
-      try {
-        const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
-          onUploadProgress: ({ loaded, total }) => {
-            setUploadProgress(Math.round((loaded * 100) / total))
-          },
-          headers: { Authorization: `Bearer ${await getAccessTokenSilently()}` }
-        })
+    if (!file) return
 
-        if (res.data.success) {
-          setInput((prev) => ({
-            ...prev,
-            videoUrl: res.data?.data?.url
-          }))
-          toast.success(res.data.message)
-        }
-      } catch (error) {
-        console.log(error)
-        toast.error('video upload failed')
-      } finally {
-        setMediaProgress(false)
-        setBtnDisable(false)
+    const formData = new FormData()
+    formData.append('file', file)
+    setMediaProgress(true)
+    try {
+      const res = await axios.post(`${MEDIA_API}/upload-video`, formData, {
+        onUploadProgress: ({ loaded, total }) => {
+          setUploadProgress(Math.round((loaded * 100) / total))
+        },
+        headers: { Authorization: `Bearer ${await getAccessTokenSilently()}` }
+      })
+
+      if (res.data.success) {
+        setInput((prev) => ({
+          ...prev,
+          videoUrl: res.data?.data?.url
+        }))
+        toast.success(res.data.message)
       }
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to upload video')
+    } finally {
+      setMediaProgress(false)
+      setBtnDisable(false)
     }
   }
 

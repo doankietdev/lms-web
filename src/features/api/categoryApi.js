@@ -11,11 +11,14 @@ export const categoryApi = createApi({
     baseUrl: CATEGORY_API,
     credentials: 'include',
     prepareHeaders: async (headers) => {
-      const token = await getAccessTokenSilently()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
+      try {
+        const token = await getAccessTokenSilently()
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`)
+        }
+        return headers
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) { /* empty */ }
     }
   }),
   endpoints: (builder) => ({
@@ -27,6 +30,4 @@ export const categoryApi = createApi({
     })
   })
 })
-export const {
-  useGetCategoriesQuery
-} = categoryApi
+export const { useGetCategoriesQuery } = categoryApi

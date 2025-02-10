@@ -11,11 +11,14 @@ export const userApi = createApi({
     baseUrl: USER_API,
     credentials: 'include',
     prepareHeaders: async (headers) => {
-      const token = await getAccessTokenSilently()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
+      try {
+        const token = await getAccessTokenSilently()
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`)
+        }
+        return headers
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) { /* empty */ }
     }
   }),
   endpoints: (builder) => ({
@@ -28,8 +31,10 @@ export const userApi = createApi({
         try {
           const result = await queryFulfilled
           dispatch(userLoggedIn({ user: result.data.user }))
-        // eslint-disable-next-line no-unused-vars
-        } catch (error) { /* empty */ }
+          // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+          /* empty */
+        }
       }
     }),
     updateUser: builder.mutation({

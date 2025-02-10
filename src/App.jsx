@@ -89,8 +89,6 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         )
       },
-
-      // admin routes start from here
       {
         path: 'admin',
         element: (

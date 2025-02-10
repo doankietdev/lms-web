@@ -10,11 +10,14 @@ export const purchaseApi = createApi({
     baseUrl: COURSE_PURCHASE_API,
     credentials: 'include',
     prepareHeaders: async (headers) => {
-      const token = await getAccessTokenSilently()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
+      try {
+        const token = await getAccessTokenSilently()
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`)
+        }
+        return headers
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) { /* empty */ }
     }
   }),
   endpoints: (builder) => ({

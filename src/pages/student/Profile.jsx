@@ -1,5 +1,5 @@
 import LoadingSpinner from '@/components/LoadingSpinner'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -7,20 +7,19 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
 import { API_ROOT, API_VERSION } from '@/configs/env'
 import { useLoadUserQuery, useUpdateUserMutation } from '@/features/api/userApi'
+import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Course from './Course'
-import { useAuth0 } from '@auth0/auth0-react'
 
 const USER_API = `${API_ROOT}/${API_VERSION}/user`
 
@@ -34,7 +33,7 @@ const Profile = () => {
   const { data, isLoading, refetch } = useLoadUserQuery()
   const [
     updateUser,
-    { data: updateUserData, isLoading: updateUserIsLoading, isError, error, isSuccess }
+    { isLoading: updateUserIsLoading }
   ] = useUpdateUserMutation()
 
   useEffect(() => {

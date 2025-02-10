@@ -10,6 +10,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useGetCategoriesQuery } from '@/features/api/categoryApi'
 import { useState } from 'react'
 
@@ -18,7 +19,7 @@ const Filter = ({ handleFilterChange }) => {
   const [selectedCategories, setSelectedCategories] = useState([])
   const [sortByPrice, setSortByPrice] = useState('')
 
-  const { data } = useGetCategoriesQuery()
+  const { data, isLoading } = useGetCategoriesQuery()
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prevCategories) => {
@@ -36,12 +37,12 @@ const Filter = ({ handleFilterChange }) => {
     handleFilterChange(selectedCategories, selectedValue)
   }
 
-  const categories = data?.categories|| []
+  const categories = data?.categories || []
 
   return (
-    <div className="w-full md:w-[20%]">
-      <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
+    <div>
+      <div className="flex flex-col gap-1">
+        <h1 className="font-semibold text-lg">Filter Options</h1>
         <Select onValueChange={selectByPriceHandler}>
           <SelectTrigger>
             <SelectValue placeholder="Sort by" />
@@ -56,17 +57,37 @@ const Filter = ({ handleFilterChange }) => {
         </Select>
       </div>
       <Separator className="my-4" />
-      <div>
-        <h1 className="font-semibold mb-2">CATEGORY</h1>
-        {categories?.map((category, index) => (
-          <div key={index} className="flex items-center space-x-2 my-2">
-            <Checkbox id={category._id} onCheckedChange={() => handleCategoryChange(category._id)} />
-            <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              {category.categoryTitle}
-            </Label>
-          </div>
-        ))}
+      <div className="flex flex-col gap-1">
+        <h1 className="font-semibold text-lg">Categories</h1>
+        <div>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, idx) => (
+              <CategorySkeleton key={idx} />
+            ))
+          ) : (
+            categories?.map((category, index) => (
+              <div key={index} className="flex items-center space-x-2 my-2">
+                <Checkbox
+                  id={category._id}
+                  onCheckedChange={() => handleCategoryChange(category._id)}
+                />
+                <Label className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {category.categoryTitle}
+                </Label>
+              </div>
+            ))
+          )}
+        </div>
       </div>
+    </div>
+  )
+}
+
+const CategorySkeleton = () => {
+  return (
+    <div className="flex items-center space-x-2 my-2">
+      <Skeleton className="h-4 w-4" />
+      <Skeleton className="h-4 w-12" />
     </div>
   )
 }

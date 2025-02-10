@@ -4,6 +4,7 @@ import { Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// eslint-disable-next-line react/prop-types
 const Checkbox = React.forwardRef(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}

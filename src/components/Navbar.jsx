@@ -132,7 +132,6 @@ export default Navbar
 const MobileNavbar = ({ user }) => {
   const { logout } = useAuth0()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const logoutHandler = async () => {
     try {

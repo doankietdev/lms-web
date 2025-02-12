@@ -13,3 +13,9 @@ export const COURSE_LEVELS = {
     LABEL: 'Advance'
   }
 }
+
+export const ERROR_TYPES = {
+  ACCESS_DENIED: 'access_denied',
+  NOT_FOUND: 'not_found',
+  SERVER_ERROR: 'server_error'
+}

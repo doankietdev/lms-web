@@ -12,6 +12,7 @@ export const ProtectedRoute = ({ children }) => {
   return children
 }
 
+// eslint-disable-next-line react/prop-types
 export const AdminRoute = ({ children }) => {
   const { user } = useSelector((store) => store.user)
 

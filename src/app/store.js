@@ -8,6 +8,7 @@ import { userApi } from '@/features/api/userApi'
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { categoryApi } from '@/features/api/categoryApi'
+import { errorMiddleware } from './errorMiddleware'
 
 const persistConfig = {
   key: "root",
@@ -26,7 +27,8 @@ export const appStore = configureStore({
       categoryApi.middleware,
       courseApi.middleware,
       purchaseApi.middleware,
-      courseProgressApi.middleware
+      courseProgressApi.middleware,
+      errorMiddleware
     )
 })
 

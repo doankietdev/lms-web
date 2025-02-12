@@ -2,11 +2,12 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './App.jsx'
 import { appStore, persistor } from './app/store'
-import { Toaster } from './components/ui/sonner'
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from './configs/env'
+
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
@@ -23,9 +24,10 @@ createRoot(document.getElementById('root')).render(
       useRefreshTokensFallback={true}
     >
       <Provider store={appStore}>
-        <PersistGate loading='null' persistor={persistor}>
-          <App />
-          <Toaster />
+        <PersistGate loading="null" persistor={persistor}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
         </PersistGate>
       </Provider>
     </Auth0Provider>

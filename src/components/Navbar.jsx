@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import DarkMode from '@/DarkMode'
 import { userLoggedOut } from '@/features/userSlice'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import { Menu, School } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import {
@@ -19,7 +20,6 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger
@@ -89,13 +89,13 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to="my-learning">My learning</Link>
                   </DropdownMenuItem>
-                  {user?.role === 'instructor' && (
+                  {/* {user?.role === 'instructor' && ( */}
                     <>
                       <DropdownMenuItem>
                         <Link to="/admin/dashboard">Dashboard</Link>
                       </DropdownMenuItem>
                     </>
-                  )}
+                  {/* )} */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logoutHandler}>Log out</DropdownMenuItem>
@@ -165,13 +165,11 @@ const MobileNavbar = ({ user }) => {
           <Link to="/profile">Edit Profile</Link>
           {user?.role === 'instructor' && <Link to="/admin/dashboard">Dashboard</Link>}
         </nav>
-        <SheetFooter>
-          <SheetClose asChild>
-            <p className="cursor-pointer" onClick={logoutHandler}>
-              Log out
-            </p>
-          </SheetClose>
-        </SheetFooter>
+        <SheetClose asChild>
+          <p className="cursor-pointer" onClick={logoutHandler}>
+            Log out
+          </p>
+        </SheetClose>
       </SheetContent>
     </Sheet>
   )

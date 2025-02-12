@@ -21,6 +21,7 @@ import {
 import { useGetCourseDetailWithStatusQuery } from '@/features/api/purchaseApi'
 import { formatCash } from '@/lib/utils'
 import { BadgeInfo, Lock, PlayCircle } from 'lucide-react'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -59,7 +60,7 @@ const CourseDetail = () => {
             </p>
             <div className="flex items-center gap-2 text-sm">
               <BadgeInfo size={16} />
-              <p>Last updated {course?.createdAt.split('T')[0]}</p>
+              <p>Last updated {moment(course?.createdAt).format('YYYY-MM-DD') ?? 'N/A'}</p>
             </div>
             <p>Students enrolled: {course?.enrolledStudents.length}</p>
           </div>

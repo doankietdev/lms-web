@@ -1,4 +1,4 @@
-import { AdminRoute, ProtectedRoute } from '@/components/ProtectedRoutes'
+import { ProtectedRoute } from '@/components/ProtectedRoutes'
 import PurchaseCourseProtectedRoute from '@/components/PurchaseCourseProtectedRoute'
 import MainLayout from '@/layout/MainLayout'
 import { AuthCallback } from '@/pages/AuthCallback'
@@ -17,6 +17,7 @@ import HeroSection from '@/pages/student/HeroSection'
 import MyLearning from '@/pages/student/MyLearning'
 import Profile from '@/pages/student/Profile'
 import SearchPage from '@/pages/student/SearchPage'
+import { ROLES } from '@/utils/constants'
 import { useRoutes } from 'react-router-dom'
 
 export const Routes = () => {
@@ -82,12 +83,10 @@ export const Routes = () => {
           )
         },
         {
-          path: 'admin',
+          path: 'instructor',
           element: (
-            <ProtectedRoute>
-              <AdminRoute>
+            <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.INSTRUCTOR]}>
               <Sidebar />
-              </AdminRoute>
             </ProtectedRoute>
           ),
           children: [
@@ -116,6 +115,14 @@ export const Routes = () => {
               element: <EditLecture />
             }
           ]
+        },
+        {
+          path: '403',
+          element: <ErrorPage code="403" message="Access Denied" />
+        },
+        {
+          path: '500',
+          element: <ErrorPage code="500" message="Internal Server Error" />
         },
         {
           path: '*',

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import DarkMode from '@/DarkMode'
 import { userLoggedOut } from '@/features/userSlice'
+import { ROLES } from '@/utils/constants'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Separator } from '@radix-ui/react-dropdown-menu'
 import { Menu, School } from 'lucide-react'
@@ -16,14 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from './ui/dropdown-menu'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from './ui/sheet'
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
 
 const Navbar = () => {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
@@ -32,7 +26,7 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      await logout({ logoutParams: { returnTo: window.location.origin } })
+      await logout()
       dispatch(userLoggedOut())
       // eslint-disable-next-line no-unused-vars
     } catch (error) {
@@ -50,13 +44,13 @@ const Navbar = () => {
         </Link>
         {/* User icons and dark mode icon  */}
         <div className="flex items-center gap-4">
-          {!isAuthenticated && (
+          {(!isAuthenticated || !user) && (
             <Button variant="outline" onClick={() => loginWithRedirect()}>
               Login
             </Button>
           )}
           <DarkMode />
-          {isAuthenticated && (
+          {isAuthenticated && user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
@@ -89,13 +83,14 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to="my-learning">My learning</Link>
                   </DropdownMenuItem>
-                  {/* {user?.role === 'instructor' && ( */}
-                    <>
-                      <DropdownMenuItem>
-                        <Link to="/admin/dashboard">Dashboard</Link>
-                      </DropdownMenuItem>
-                    </>
-                  {/* )} */}
+                  {user?.role === ROLES.ADMIN ||
+                    (user?.role === ROLES.INSTRUCTOR && (
+                      <>
+                        <DropdownMenuItem>
+                          <Link to="/instructor/dashboard">Dashboard</Link>
+                        </DropdownMenuItem>
+                      </>
+                    ))}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logoutHandler}>Log out</DropdownMenuItem>
@@ -113,13 +108,13 @@ const Navbar = () => {
 
         <div>
           <div className="flex items-center gap-4">
-            {!isAuthenticated && (
+            {(!isAuthenticated || !user) && (
               <Button variant="outline" onClick={() => loginWithRedirect()}>
                 Login
               </Button>
             )}
             <DarkMode />
-            {isAuthenticated && <MobileNavbar user={user} />}
+            {isAuthenticated && user && <MobileNavbar user={user} />}
           </div>
         </div>
       </div>
@@ -135,7 +130,7 @@ const MobileNavbar = ({ user }) => {
 
   const logoutHandler = async () => {
     try {
-      await logout({ logoutParams: { returnTo: window.location.origin } })
+      await logout()
       dispatch(userLoggedOut())
       // eslint-disable-next-line no-unused-vars
     } catch (error) {
@@ -163,7 +158,9 @@ const MobileNavbar = ({ user }) => {
         <nav className="flex flex-col space-y-4">
           <Link to="/my-learning">My Learning</Link>
           <Link to="/profile">Edit Profile</Link>
-          {user?.role === 'instructor' && <Link to="/admin/dashboard">Dashboard</Link>}
+          {(user?.role === ROLES.ADMIN || user?.role === ROLES.INSTRUCTOR) && (
+            <Link to="/instructor/dashboard">Dashboard</Link>
+          )}
         </nav>
         <SheetClose asChild>
           <p className="cursor-pointer" onClick={logoutHandler}>

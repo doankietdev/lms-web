@@ -38,6 +38,18 @@ export const loginWithRedirect = async (options) => {
   loginWithRedirectFn(options)
 }
 
+let logoutFn
+export const injectLogout = logout => {
+  logoutFn = logout
+}
+/**
+ * 
+ * @param {import('@auth0/auth0-react').LogoutOptions} options 
+ */
+export const logout = async (options) => {
+  logoutFn(options)
+}
+
 let navigateFn
 export const injectNavigate = navigate => {
   navigateFn = navigate

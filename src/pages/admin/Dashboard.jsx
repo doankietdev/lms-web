@@ -1,19 +1,18 @@
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetPurchasedCoursesQuery } from '@/features/api/purchaseApi'
-import React from 'react'
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
   CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
   Tooltip,
-  ResponsiveContainer
+  XAxis,
+  YAxis
 } from 'recharts'
 
 const Dashboard = () => {
-  const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery()
+  const { data, isError, isLoading } = useGetPurchasedCoursesQuery()
 
   if (isError) return <h1 className="text-red-500">Failed to get purchased course</h1>
 

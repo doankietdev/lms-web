@@ -1,3 +1,8 @@
+export const ROLES = {
+  ADMIN: 'admin',
+  INSTRUCTOR: 'instructor',
+  STUDENT: 'student'
+}
 
 export const COURSE_LEVELS = {
   BEGINNER: {
@@ -15,7 +20,5 @@ export const COURSE_LEVELS = {
 }
 
 export const ERROR_TYPES = {
-  ACCESS_DENIED: 'access_denied',
-  NOT_FOUND: 'not_found',
-  SERVER_ERROR: 'server_error'
+  NOT_FOUND: 'not_found'
 }

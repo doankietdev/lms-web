@@ -1,13 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// type ErrorType = "not_found" | "forbidden" | "server_error" | null;
-
 const initialState = {
   errorType: null
 }
 
 const errorSlice = createSlice({
-  name: 'error',
+  name: 'errorSlice',
   initialState,
   reducers: {
     setError: (state, action) => {

@@ -19,9 +19,7 @@ export const ErrorBoundary = ({ children }) => {
   if (errorType) {
     return (
       <MainLayout>
-        {errorType === ERROR_TYPES.ACCESS_DENIED && <ErrorPage code="403" message="Access Denied" />}
         {errorType === ERROR_TYPES.NOT_FOUND && <ErrorPage code="404" message="Page Not Found" />}
-        {errorType === ERROR_TYPES.SERVER_ERROR && <ErrorPage code="500" message="Internal Server Error" />}
       </MainLayout>
     )
   }

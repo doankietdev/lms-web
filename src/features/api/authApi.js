@@ -1,6 +1,7 @@
 import { API_ROOT, API_VERSION } from '@/configs/env'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { userLoggedIn } from '../userSlice'
+import { logout } from '@/lib/utils'
 
 const AUTH_API = `${API_ROOT}/${API_VERSION}/auth`
 
@@ -25,8 +26,9 @@ export const authApi = createApi({
         try {
           const result = await queryFulfilled
           dispatch(userLoggedIn({ user: result.data.user }))
+        // eslint-disable-next-line no-unused-vars
         } catch (error) {
-          console.log(error)
+          logout()
         }
       }
     })

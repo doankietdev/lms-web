@@ -1,14 +1,14 @@
-import Navbar from '@/components/Navbar'
+import DashboardNavbar from '@/components/DashboardNavbar'
 import { Outlet } from 'react-router-dom'
 
 // eslint-disable-next-line react/prop-types
-const MainLayout = ({ children }) => {
+const DashboardLayout = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <DashboardNavbar />
       <div className="flex-1 mt-16">{children ? children : <Outlet />}</div>
     </div>
   )
 }
 
-export default MainLayout
+export default DashboardLayout

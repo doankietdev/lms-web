@@ -1,15 +1,15 @@
 import { ProtectedRoute } from '@/components/ProtectedRoutes'
 import PurchaseCourseProtectedRoute from '@/components/PurchaseCourseProtectedRoute'
+import DashboardLayout from '@/layout/DashboardLayout'
 import MainLayout from '@/layout/MainLayout'
 import { AuthCallback } from '@/pages/AuthCallback'
 import { ErrorPage } from '@/pages/ErrorPage'
 import Dashboard from '@/pages/admin/Dashboard'
 import Sidebar from '@/pages/admin/Sidebar'
-import AddCourse from '@/pages/admin/course/AddCourse'
 import CourseTable from '@/pages/admin/course/CourseTable'
 import EditCourse from '@/pages/admin/course/EditCourse'
-import CreateLecture from '@/pages/admin/lecture/CreateLecture'
 import EditLecture from '@/pages/admin/lecture/EditLecture'
+import Lectures from '@/pages/admin/lecture/Lectures'
 import CourseDetail from '@/pages/student/CourseDetail'
 import CourseProgress from '@/pages/student/CourseProgress'
 import Courses from '@/pages/student/Courses'
@@ -81,14 +81,20 @@ export const Routes = () => {
               </PurchaseCourseProtectedRoute>
             </ProtectedRoute>
           )
-        },
+        }
+      ]
+    },
+    {
+      path: '/',
+      element: (
+        <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.INSTRUCTOR]}>
+          <DashboardLayout />
+        </ProtectedRoute>
+      ),
+      children: [
         {
           path: 'instructor',
-          element: (
-            <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.INSTRUCTOR]}>
-              <Sidebar />
-            </ProtectedRoute>
-          ),
+          element: <Sidebar />,
           children: [
             {
               path: 'dashboard',
@@ -99,16 +105,12 @@ export const Routes = () => {
               element: <CourseTable />
             },
             {
-              path: 'course/create',
-              element: <AddCourse />
-            },
-            {
               path: 'course/:courseId',
               element: <EditCourse />
             },
             {
               path: 'course/:courseId/lecture',
-              element: <CreateLecture />
+              element: <Lectures />
             },
             {
               path: 'course/:courseId/lecture/:lectureId',
@@ -118,7 +120,7 @@ export const Routes = () => {
         },
         {
           path: '403',
-          element: <ErrorPage code="403" message="Access Denied" />
+          element: <ErrorPage code="403" message="Access Denied"  />
         },
         {
           path: '500',

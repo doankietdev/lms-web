@@ -15,7 +15,7 @@ const Course = ({ course }) => {
             className="w-full h-36 object-cover rounded-t-lg"
           />
         </div>
-        <CardContent className="px-5 py-4 space-y-2">
+        <CardContent className="px-5 py-2 space-y-2">
           <div>
             <p className="font-bold text-lg truncate">{course.courseTitle}</p>
             <p className="mt-1 text-sm truncate">{course.subTitle}</p>

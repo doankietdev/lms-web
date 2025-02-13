@@ -1,3 +1,5 @@
+import LoadingSpinner from '@/components/LoadingSpinner'
+import RichTextEditor from '@/components/RichTextEditor'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,15 +12,13 @@ import {
   useGetLectureByIdQuery,
   useRemoveLectureMutation
 } from '@/features/api/courseApi'
+import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import ReactPlayer from 'react-player'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import ReactPlayer from 'react-player'
-import { useAuth0 } from '@auth0/auth0-react'
-import RichTextEditor from '@/components/RichTextEditor'
-import LoadingSpinner from '@/components/LoadingSpinner'
 
 const MEDIA_API = `${API_ROOT}/${API_VERSION}/media`
 
@@ -50,9 +50,8 @@ const LectureTab = () => {
     }
   }, [lecture])
 
-  const [editLecture, { data, isLoading, error, isSuccess }] = useEditLectureMutation()
-  const [removeLecture, { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess }] =
-    useRemoveLectureMutation()
+  const [editLecture, { isLoading }] = useEditLectureMutation()
+  const [removeLecture, { isLoading: removeLoading }] = useRemoveLectureMutation()
 
   const fileChangeHandler = async (e) => {
     setBtnDisable(true)
@@ -77,8 +76,8 @@ const LectureTab = () => {
         }))
         toast.success(res.data.message)
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      console.log(error)
       toast.error('Failed to upload video')
     } finally {
       setMediaProgress(false)
@@ -87,32 +86,28 @@ const LectureTab = () => {
   }
 
   const editLectureHandler = async () => {
-    await editLecture({
-      ...input,
-      courseId,
-      lectureId
-    })
+    try {
+      await editLecture({
+        ...input,
+        courseId,
+        lectureId
+      }).unwrap()
+      navigate(`/instructor/course/${courseId}/lecture`)
+      toast.success('Edit lecture successfully')
+    } catch (error) {
+      toast.error(error.data?.message)
+    }
   }
 
   const removeLectureHandler = async () => {
-    await removeLecture(lectureId)
-  }
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message)
-    }
-    if (error) {
+    try {
+      await removeLecture(lectureId).unwrap()
+      navigate(`/instructor/course/${courseId}/lecture`)
+      toast.success('Remove lecture successfully')
+    } catch (error) {
       toast.error(error.data?.message)
     }
-  }, [isSuccess, error, data?.message, courseId])
-
-  useEffect(() => {
-    if (removeSuccess) {
-      toast.success(removeData?.message)
-      navigate(`/admin/course/${courseId}/lecture`)
-    }
-  }, [courseId, navigate, removeData?.message, removeSuccess])
+  }
 
   return lectureByIdLoading ? (
     <LoadingSpinner />
@@ -134,8 +129,8 @@ const LectureTab = () => {
           )}
         </Button>
       </CardHeader>
-      <CardContent className="flex flex-col gap-5">
-        <div className='flex flex-col gap-3'>
+      <CardContent className="flex flex-col gap-8">
+        <div className="flex flex-col gap-3">
           <Label>Title</Label>
           <Input
             value={input.lectureTitle}
@@ -144,22 +139,29 @@ const LectureTab = () => {
             placeholder="Ex. Introduction to Javascript"
           />
         </div>
-        <div className='flex flex-col gap-3'>
+        <div className="flex flex-col gap-3">
           <Label>Description</Label>
           <RichTextEditor input={input} setInput={setInput} />
         </div>
-        <div className='flex flex-col gap-3'>
-          <Label>
-            Video <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            type="file"
-            accept="video/*"
-            disabled={btnDisable}
-            onChange={fileChangeHandler}
-            placeholder="Ex. Introduction to Javascript"
-            className="w-fit"
-          />
+        <div className="flex flex-col gap-3">
+          <div className="w-[400px] flex flex-col gap-3">
+            <Label>
+              Video <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              type="file"
+              accept="video/*"
+              disabled={btnDisable}
+              onChange={fileChangeHandler}
+              className="w-full"
+            />
+            {mediaProgress && (
+              <div>
+                <Progress value={uploadProgress} />
+                <p className="text-center mt-1">{uploadProgress}% uploaded</p>
+              </div>
+            )}
+          </div>
           {(input.videoUrl || lecture?.videoUrl) && (
             <div className="mt-4">
               <ReactPlayer url={input.videoUrl || lecture?.videoUrl} controls />
@@ -175,14 +177,7 @@ const LectureTab = () => {
           <Label htmlFor="airplane-mode">Free Preview</Label>
         </div>
 
-        {mediaProgress && (
-          <div>
-            <Progress value={uploadProgress} />
-            <p>{uploadProgress}% uploaded</p>
-          </div>
-        )}
-
-        <div className='mt-2'>
+        <div className="mt-2">
           <Button disabled={isLoading} onClick={editLectureHandler}>
             {isLoading ? (
               <>

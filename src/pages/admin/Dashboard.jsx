@@ -30,8 +30,8 @@ const Dashboard = () => {
   return isLoading ? (
     <LoadingSpinner />
   ) : (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-center items-center">
         <CardHeader>
           <CardTitle>Total Sales</CardTitle>
         </CardHeader>
@@ -40,7 +40,7 @@ const Dashboard = () => {
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-center items-center">
         <CardHeader>
           <CardTitle>Total Revenue</CardTitle>
         </CardHeader>

@@ -128,7 +128,7 @@ const CourseDetail = () => {
                 </h1>
               </CardContent>
               <CardFooter className="flex justify-center p-4">
-                {(purchased || isOwner || isFree) ? (
+                {purchased || isOwner || isFree ? (
                   <Button
                     disabled={!course?.lectures?.length}
                     onClick={handleContinueCourse}
@@ -154,10 +154,7 @@ const CourseDetail = () => {
         >
           <DialogHeader>
             <DialogDescription>Course Lecture Preview</DialogDescription>
-            <DialogTitle className="!mt-4 text-2xl">{`${
-              course.lectures?.findIndex((curLecture) => curLecture?._id === previewLecture?._id) +
-              1
-            }. ${previewLecture?.lectureTitle}`}</DialogTitle>
+            <DialogTitle className="!mt-4 text-3xl">{previewLecture?.lectureTitle}</DialogTitle>
           </DialogHeader>
 
           <div className="mt-3 flex flex-col gap-3  overflow-y-scroll">
@@ -170,7 +167,7 @@ const CourseDetail = () => {
               />
             )}
             <p
-              className="text-lg"
+              className="text-2xl"
               dangerouslySetInnerHTML={{
                 __html: previewLecture?.description
               }}

@@ -34,7 +34,6 @@ export const appStore = configureStore({
 
 export const persistor = persistStore(appStore);
 
-// const initializeApp = async () => {
-//   await appStore.dispatch(userApi.endpoints.loadUser.initiate({}, { forceRefetch: true }))
-// }
-// initializeApp()
+export const initialState = async () => {
+  await appStore.dispatch(userApi.endpoints.loadUser.initiate({}, { forceRefetch: true }))
+}

@@ -5,8 +5,6 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
@@ -15,6 +13,7 @@ import {
   useUpdateLectureProgressMutation
 } from '@/features/api/courseProgressApi'
 import { CheckCircle, CheckCircle2, CirclePlay } from 'lucide-react'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import Confetti from 'react-confetti'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -132,14 +131,13 @@ const CourseProgress = () => {
             {/* Display current watching lecture title */}
             <div className="mt-4">
               <h3 className="font-medium text-3xl">
-                {`${
-                  courseDetails.lectures.findIndex(
-                    (lec) => lec._id === (currentLecture?._id || initialLecture?._id)
-                  ) + 1
-                }. ${currentLecture?.lectureTitle || initialLecture?.lectureTitle}`}
+                {currentLecture?.lectureTitle || initialLecture?.lectureTitle}
               </h3>
+              <p className='mt-2 text-sm'>
+                {`Updated ${moment(currentLecture?.updatedAt || initialLecture?.updatedAt).format('LL')}`}
+              </p>
               <p
-                className="mt-4 text-xl"
+                className="mt-6 text-2xl"
                 dangerouslySetInnerHTML={{
                   __html: currentLecture?.description || initialLecture?.description
                 }}

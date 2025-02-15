@@ -1,13 +1,18 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { initialState } from './app/store'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { ThemeProvider } from './components/ThemeProvider'
 import { Toaster } from './components/ui/sonner'
+import { setError } from './features/errorSlice'
 import { injectGetAccessTokenSilently, injectLoginWithRedirect, injectLogout, injectNavigate } from './lib/utils'
 import { Routes } from './routes'
+import { ERROR_TYPES } from './utils/constants'
 
 import 'video-react/dist/video-react.css'
 import './App.css'
+
 
 function App() {
   const { getAccessTokenSilently, loginWithRedirect, logout } = useAuth0()
@@ -18,17 +23,18 @@ function App() {
   injectGetAccessTokenSilently(getAccessTokenSilently)
   injectNavigate(navigate)
 
-  // useEffect(() => {
-  //   const checkAuth = async () => {
-  //     try {
-  //       await getAccessTokenSilently()
-  //       // eslint-disable-next-line no-unused-vars
-  //     } catch (error) {
-  //       setError(ERROR_TYPES.SERVER_ERROR)
-  //     }
-  //   }
-  //   checkAuth()
-  // }, [getAccessTokenSilently])
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await getAccessTokenSilently()
+        await initialState()
+        // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        setError(ERROR_TYPES.SERVER_ERROR)
+      }
+    }
+    checkAuth()
+  }, [getAccessTokenSilently])
 
   return (
     <ThemeProvider>

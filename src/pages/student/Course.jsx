@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -31,12 +32,14 @@ const Course = ({ course }) => {
               <p className="font-medium text-sm">{course.creator?.name}</p>
             </div>
           <div className="flex items-center gap-2">
+            {course.courseLevel && (
             <Badge
               title="ab"
               className={'px-2 py-1 text-xs rounded-full'}
             >
               {course.courseLevel}
             </Badge>
+            )}
             <Badge
               className={'px-2 py-1 text-xs rounded-full'}
             >

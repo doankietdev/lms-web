@@ -81,6 +81,18 @@ export const Routes = () => {
               </PurchaseCourseProtectedRoute>
             </ProtectedRoute>
           )
+        },
+        {
+          path: '403',
+          element: <ErrorPage code="403" message="Access Denied"  />
+        },
+        {
+          path: '500',
+          element: <ErrorPage code="500" message="Internal Server Error" />
+        },
+        {
+          path: '*',
+          element: <ErrorPage code="404" message="Page Not Found" />
         }
       ]
     },
@@ -117,18 +129,6 @@ export const Routes = () => {
               element: <EditLecture />
             }
           ]
-        },
-        {
-          path: '403',
-          element: <ErrorPage code="403" message="Access Denied"  />
-        },
-        {
-          path: '500',
-          element: <ErrorPage code="500" message="Internal Server Error" />
-        },
-        {
-          path: '*',
-          element: <ErrorPage code="404" message="Page Not Found" />
         }
       ]
     }

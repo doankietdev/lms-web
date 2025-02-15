@@ -18,13 +18,15 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import { useRegisterFreeCourseMutation } from '@/features/api/courseApi'
 import { useGetCourseDetailWithStatusQuery } from '@/features/api/purchaseApi'
 import { formatCash } from '@/lib/utils'
-import { BadgeInfo, Lock, PlayCircle } from 'lucide-react'
+import { BadgeInfo, Loader2, Lock, PlayCircle } from 'lucide-react'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const CourseDetail = () => {
   const [previewLecture, setPreviewLecture] = useState(null)
@@ -32,6 +34,8 @@ const CourseDetail = () => {
   const courseId = params.courseId
   const navigate = useNavigate()
   const { data, isLoading } = useGetCourseDetailWithStatusQuery(courseId)
+  const [registerFreeCourse, { isLoading: registerFreeCourseLoading }] =
+    useRegisterFreeCourseMutation()
   const [isFree, setIsFree] = useState(false)
 
   const { course, purchased, isOwner } = data || {}
@@ -44,6 +48,18 @@ const CourseDetail = () => {
   const handleContinueCourse = () => {
     navigate(`/course-progress/${courseId}`)
   }
+
+  const handleRegisterFreeCourse = useCallback(async () => {
+    try {
+      await registerFreeCourse({ courseId }).unwrap()
+      toast.error('Register for study successfully')
+      // navigate(`/course-progress/${courseId}`)
+      window.location.href = `/course-progress/${courseId}`
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      toast.error('Failed to register for study')
+    }
+  }, [courseId, registerFreeCourse])
 
   return isLoading ? (
     <LoadingSpinner />
@@ -109,15 +125,10 @@ const CourseDetail = () => {
                   />
                 </div>
                 <h1 className="text-lg md:text-xl font-semibold flex items-center gap-4">
-                  {formatCash(course?.coursePrice)}
-                  {purchased && !isFree && !isOwner && (
+                  {isFree ? 'Free' : formatCash(course?.coursePrice)}
+                  {purchased && !isOwner && (
                     <Badge variant="outline" className="bg-green-600 text-white">
                       Purchased
-                    </Badge>
-                  )}
-                  {isFree && (
-                    <Badge variant="outline" className="bg-green-600 text-white">
-                      Free
                     </Badge>
                   )}
                   {isOwner && (
@@ -128,13 +139,17 @@ const CourseDetail = () => {
                 </h1>
               </CardContent>
               <CardFooter className="flex justify-center p-4">
-                {purchased || isOwner || isFree ? (
-                  <Button
-                    disabled={!course?.lectures?.length}
-                    onClick={handleContinueCourse}
-                    className="w-full"
-                  >
+                {purchased || isOwner ? (
+                  <Button onClick={handleContinueCourse} className="w-full">
                     Continue Course
+                  </Button>
+                ) : isFree ? (
+                  <Button onClick={handleRegisterFreeCourse} className="w-full">
+                    {registerFreeCourseLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      'Register for study'
+                    )}
                   </Button>
                 ) : (
                   <BuyCourseButton courseId={courseId} />

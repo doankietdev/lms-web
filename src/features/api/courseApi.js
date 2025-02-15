@@ -17,8 +17,10 @@ export const courseApi = createApi({
           headers.set('Authorization', `Bearer ${token}`)
         }
         return headers
-      // eslint-disable-next-line no-unused-vars
-      } catch (error) { /* empty */ }
+        // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        /* empty */
+      }
     }
   }),
   endpoints: (builder) => ({
@@ -118,6 +120,15 @@ export const courseApi = createApi({
         url: `/${courseId}?publish=${query}`,
         method: 'PATCH'
       })
+    }),
+    registerFreeCourse: builder.mutation({
+      query: ({ courseId }) => ({
+        url: '/register-free',
+        method: 'POST',
+        body: {
+          courseId
+        }
+      })
     })
   })
 })
@@ -133,5 +144,6 @@ export const {
   useEditLectureMutation,
   useRemoveLectureMutation,
   useGetLectureByIdQuery,
-  usePublishCourseMutation
+  usePublishCourseMutation,
+  useRegisterFreeCourseMutation
 } = courseApi
